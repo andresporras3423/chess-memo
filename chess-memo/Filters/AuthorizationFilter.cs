@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,10 @@ namespace chess_memo.Filters
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            throw new NotImplementedException();
+            if (context.HttpContext.Session.GetString("id") == null)
+            {
+                context.Result = new UnauthorizedResult();
+            }
         }
     }
 }

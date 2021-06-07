@@ -26,5 +26,12 @@ namespace chess_memo.Controllers
                 return msn.responseMessage;
             }
         }
+
+        [AuthorizationFilter]
+        [HttpGet]
+        public string Get()
+        {
+            return "hello world";
+        }
     }
 }

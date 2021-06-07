@@ -13,6 +13,7 @@ namespace chess_memo.Controllers
     [ApiController]
     public class BaseController : ControllerBase
     {
+
         // método para leer los parámetros en el body
         public Dictionary<string, string> read_body()
         {
