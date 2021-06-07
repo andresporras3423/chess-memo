@@ -33,5 +33,12 @@ namespace chess_memo.Controllers
             if (HttpContext.Session.GetString("id") != null) return StatusCode(200);
             return StatusCode(403);
         }
+
+        [HttpDelete]
+        public IActionResult Delete()
+        {
+            HttpContext.Session.Remove("id");
+            return StatusCode(200);
+        }
     }
 }
