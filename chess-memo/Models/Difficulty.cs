@@ -5,18 +5,18 @@ using System.Collections.Generic;
 
 namespace chess_memo.Models
 {
-    public partial class Player
+    public partial class Difficulty
     {
-        public Player()
+        public Difficulty()
         {
             Configs = new HashSet<Config>();
             Scores = new HashSet<Score>();
         }
 
         public int Id { get; set; }
-        public string Email { get; set; }
-        public byte[] PasswordHash { get; set; }
-        public Guid? Salt { get; set; }
+        public string DifficultyName { get; set; }
+        public int MinPieces { get; set; }
+        public int MaxPieces { get; set; }
 
         public virtual ICollection<Config> Configs { get; set; }
         public virtual ICollection<Score> Scores { get; set; }
