@@ -23,6 +23,11 @@ namespace chess_memo.Controllers
                 var nEmail = new SqlParameter("@nEmail", body["email"]);
                 var nPassword = new SqlParameter("@nPassword", body["password"]);
                 var msn = context.Messages.FromSqlRaw("EXECUTE dbo.addPlayer @nEmail, @nPassword", parameters: new[] {nEmail, nPassword}).AsEnumerable().FirstOrDefault();
+                if(int.TryParse(msn.responseMessage, out int playerId))
+                {
+                    context.Configs.Add(new Config { DifficultyId = 1, PlayerId = playerId, Questions = 10 });
+                    context.SaveChanges();
+                }
                 return msn.responseMessage;
             }
         }
