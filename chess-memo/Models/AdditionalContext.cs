@@ -9,5 +9,6 @@ namespace chess_memo.Models
     public partial class chessmemoContext : DbContext
     {
         public virtual DbSet<Message> Messages { get; set; }
+        public virtual DbSet<UniquePosition> UniquePositions { get; set; }
     }
 }
