@@ -1,4 +1,5 @@
-﻿using chess_memo.Models;
+﻿using chess_memo.Filters;
+using chess_memo.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,6 +11,7 @@ namespace chess_memo.Controllers
 {
     public class ScoreController : BaseController
     {
+        [AuthorizationFilter]
         [HttpPost]
         public Dictionary<string, string> Post()
         {

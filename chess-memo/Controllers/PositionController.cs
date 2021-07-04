@@ -1,4 +1,5 @@
-﻿using chess_memo.Models;
+﻿using chess_memo.Filters;
+using chess_memo.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -12,6 +13,7 @@ namespace chess_memo.Controllers
 {
     public class PositionController : BaseController
     {
+        [AuthorizationFilter]
         [HttpGet]
         public List<UniquePosition> Get()
         {

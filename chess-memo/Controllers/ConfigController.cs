@@ -1,4 +1,5 @@
-﻿using chess_memo.Models;
+﻿using chess_memo.Filters;
+using chess_memo.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,7 +11,7 @@ namespace chess_memo.Controllers
 {
     public class ConfigController : BaseController
     {
-
+        [AuthorizationFilter]
         [HttpGet]
         public Dictionary<string, string> Get()
         {
@@ -31,6 +32,7 @@ namespace chess_memo.Controllers
             }
         }
 
+        [AuthorizationFilter]
         [HttpPut]
         public string Put()
         {
