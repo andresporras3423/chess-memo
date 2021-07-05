@@ -16,27 +16,28 @@ namespace chess_memo.Controllers
     {
         [AuthorizationFilter]
         [HttpPost]
-        public Dictionary<string, string> Post()
+        public RankingScore Post()
         {
-            using (var context = new chessmemoContext())
+            try
             {
-                try
+                using (var context = new chessmemoContext())
                 {
                     Dictionary<string, string> body = read_body();
-                    context.Scores.Add(new Score { PlayerId = Int32.Parse(HttpContext.Session.GetString("id")),
-                        DifficultyId = Int32.Parse(body["DifficultyId"]),
-                        Questions = Int32.Parse(body["Questions"]),
-                        Corrects = Int32.Parse(body["Corrects"]),
-                        Seconds = Int32.Parse(body["Seconds"]),
-                        DateTime = DateTime.Now
-                    });
-                    context.SaveChanges();
-                    return new Dictionary<string, string> { { "status", "success"} };
+                    var nId = new SqlParameter("@nId", Int32.Parse(HttpContext.Session.GetString("id")));
+                    var nDifficultyId = new SqlParameter("@nDifficultyId", Int32.Parse(body["nDifficultyId"]));
+                    var nQuestions = new SqlParameter("@nQuestions", Int32.Parse(body["nQuestions"]));
+                    var nCorrects = new SqlParameter("@nCorrects", Int32.Parse(body["nCorrects"]));
+                    var nSeconds = new SqlParameter("@nSeconds", Int32.Parse(body["nSeconds"]));
+                    var nDateTime = new SqlParameter("@nDateTime", DateTime.Now);
+                    RankingScore currentScore = 
+                        (RankingScore)context.RankingScores.FromSqlRaw("EXECUTE dbo.addScore @nId, @nDifficultyId, @nQuestions, @nCorrects, @nSeconds, @nDateTime", 
+                        parameters: new[] { nId, nDifficultyId, nQuestions, nCorrects, nSeconds, nDateTime }).AsEnumerable().FirstOrDefault();
+                    return currentScore;
                 }
-                catch(Exception ex)
-                {
-                    return new Dictionary<string, string> { { "status", ex.Message} };
-                }
+            }
+            catch (Exception ex)
+            {
+                return  new RankingScore { responseMessage = ex.Message } ;
             }
         }
 
@@ -58,7 +59,7 @@ namespace chess_memo.Controllers
             }
                 catch (Exception ex)
                 {
-                    return new List<RankingScore> { new RankingScore { errorMessage = ex.Message } };
+                    return new List<RankingScore> { new RankingScore { responseMessage = ex.Message } };
                 }
         }
 
@@ -81,7 +82,7 @@ namespace chess_memo.Controllers
             }
             catch (Exception ex)
             {
-                return new List<RankingScore> { new RankingScore { errorMessage = ex.Message } };
+                return new List<RankingScore> { new RankingScore { responseMessage = ex.Message } };
             }
         }
     }

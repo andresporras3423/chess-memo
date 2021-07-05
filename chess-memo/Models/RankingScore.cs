@@ -19,6 +19,6 @@ namespace chess_memo.Models
         public long? personalRanking { get; set; }
 
         public string email { get; set; }
-        public string errorMessage { get; set; }
+        public string responseMessage { get; set; }
     }
 }
