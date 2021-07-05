@@ -10,5 +10,7 @@ namespace chess_memo.Models
     {
         public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<UniquePosition> UniquePositions { get; set; }
+
+        public virtual DbSet<RankingScore> RankingScores { get; set; }
     }
 }

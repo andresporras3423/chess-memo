@@ -2,9 +2,12 @@
 using chess_memo.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace chess_memo.Controllers
@@ -35,6 +38,28 @@ namespace chess_memo.Controllers
                     return new Dictionary<string, string> { { "status", ex.Message} };
                 }
             }
+        }
+
+        [Route("global_scores")]
+        [AuthorizationFilter]
+        [HttpGet]
+        public List<RankingScore> Global_scores()
+        {
+                try
+                {
+                using (var context = new chessmemoContext())
+                {
+                    Dictionary<string, string> body = read_body();
+                    var nDifficultyId = new SqlParameter("@nDifficultyId", body["nDifficultyId"]);
+                    var nQuestions = new SqlParameter("@nQuestions", body["nQuestions"]);
+                    List<RankingScore> top10 = context.Set<RankingScore>().FromSqlRaw("EXECUTE dbo.getBestGlobalScores @nDifficultyId, @nQuestions", parameters: new[] { nDifficultyId, nQuestions }).ToList<RankingScore>();
+                    return top10;
+                }
+            }
+                catch (Exception ex)
+                {
+                    return new List<RankingScore> { new RankingScore { errorMessage = ex.Message } };
+                }
         }
     }
 }
