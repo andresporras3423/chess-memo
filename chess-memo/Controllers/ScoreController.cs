@@ -85,5 +85,28 @@ namespace chess_memo.Controllers
                 return new List<RankingScore> { new RankingScore { responseMessage = ex.Message } };
             }
         }
+
+        [Route("recent_scores")]
+        [AuthorizationFilter]
+        [HttpGet]
+        public List<RankingScore> Recent_scores()
+        {
+            try
+            {
+                using (var context = new chessmemoContext())
+                {
+                    Dictionary<string, string> body = read_body();
+                    var nDifficultyId = new SqlParameter("@nDifficultyId", body["nDifficultyId"]);
+                    var nQuestions = new SqlParameter("@nQuestions", body["nQuestions"]);
+                    var nPlayerId = new SqlParameter("@nPlayerId", HttpContext.Session.GetString("id"));
+                    List<RankingScore> top10 = context.Set<RankingScore>().FromSqlRaw("EXECUTE dbo.getRecentPersonalScores @nDifficultyId, @nQuestions, @nPlayerId", parameters: new[] { nDifficultyId, nQuestions, nPlayerId }).ToList<RankingScore>();
+                    return top10;
+                }
+            }
+            catch (Exception ex)
+            {
+                return new List<RankingScore> { new RankingScore { responseMessage = ex.Message } };
+            }
+        }
     }
 }

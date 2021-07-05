@@ -15,10 +15,9 @@ namespace chess_memo.Models
         public int corrects { get; set; }
         public int seconds { get; set; }
         public long ranking { get; set; }
-
         public long? personalRanking { get; set; }
-
         public string email { get; set; }
         public string responseMessage { get; set; }
+        public DateTime date_time { get; set; }
     }
 }
