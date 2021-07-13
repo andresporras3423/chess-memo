@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>chess_memo</RootNamespace>
+    <UserSecretsId>a05e3ce2-4bc3-41c7-9d19-8f6d7033df5b</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
