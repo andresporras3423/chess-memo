@@ -1,4 +1,5 @@
-﻿using chess_memo.Models;
+﻿using chess_memo.Filters;
+using chess_memo.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -16,28 +17,40 @@ namespace chess_memo.Controllers
         [HttpPost]
         public string Post()
         {
-            using (var context = new chessmemoContext())
+            try
             {
-                Dictionary<string, string> body = read_body();
-                var nEmail = new SqlParameter("@nEmail", body["email"]);
-                var nPassword = new SqlParameter("@nPassword", body["password"]);
-                var msn = context.Messages.FromSqlRaw("EXECUTE dbo.loginPlayer @nEmail, @nPassword", parameters: new[] { nEmail, nPassword }).AsEnumerable().FirstOrDefault();
-                if(Regex.Match(msn.responseMessage, @"[1-9]").Success) HttpContext.Session.SetString("id", msn.responseMessage);
-                return msn.responseMessage;
+                using (var context = new chessmemoContext())
+                {
+                    Dictionary<string, string> body = read_body();
+                    var nEmail = new SqlParameter("@nEmail", body["email"]);
+                    var nPassword = new SqlParameter("@nPassword", body["password"]);
+                    var msn = context.Messages.FromSqlRaw("EXECUTE dbo.loginPlayer @nEmail, @nPassword", parameters: new[] { nEmail, nPassword }).AsEnumerable().FirstOrDefault();
+                    return msn.responseMessage;
+                }
+            }
+            catch (Exception e)
+            {
+                return e.Message;
             }
         }
 
+        [AuthorizationFilter]
         [HttpGet]
         public IActionResult Get()
         {
-            if (HttpContext.Session.GetString("id") != null) return StatusCode(200);
-            return StatusCode(403);
+            return StatusCode(200);
         }
 
+        [AuthorizationFilter]
         [HttpDelete]
         public IActionResult Delete()
         {
-            HttpContext.Session.Remove("id");
+            using (var connect = new chessmemoContext())
+            {
+                var id = HttpContext.Request.Headers["id"].ToString();
+                var nId = new SqlParameter("@nId", Int32.Parse(id));
+                var msn = connect.Messages.FromSqlRaw("EXECUTE dbo.destroyLogin @nId", parameters: new[] { nId }).AsEnumerable().FirstOrDefault();
+            }
             return StatusCode(200);
         }
     }

@@ -17,6 +17,7 @@ namespace chess_memo.Models
         public string Email { get; set; }
         public byte[] PasswordHash { get; set; }
         public Guid? Salt { get; set; }
+        public Guid? Token { get; set; }
 
         public virtual ICollection<Config> Configs { get; set; }
         public virtual ICollection<Score> Scores { get; set; }

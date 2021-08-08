@@ -17,18 +17,25 @@ namespace chess_memo.Controllers
         [HttpPost]
         public string Post()
         {
-            using (var context = new chessmemoContext())
+            try
             {
-                Dictionary<string, string> body = read_body();
-                var nEmail = new SqlParameter("@nEmail", body["email"]);
-                var nPassword = new SqlParameter("@nPassword", body["password"]);
-                var msn = context.Messages.FromSqlRaw("EXECUTE dbo.addPlayer @nEmail, @nPassword", parameters: new[] {nEmail, nPassword}).AsEnumerable().FirstOrDefault();
-                if(int.TryParse(msn.responseMessage, out int playerId))
+                using (var context = new chessmemoContext())
                 {
-                    context.Configs.Add(new Config { DifficultyId = 1, PlayerId = playerId, Questions = 10 });
-                    context.SaveChanges();
+                    Dictionary<string, string> body = read_body();
+                    var nEmail = new SqlParameter("@nEmail", body["email"]);
+                    var nPassword = new SqlParameter("@nPassword", body["password"]);
+                    var msn = context.Messages.FromSqlRaw("EXECUTE dbo.addPlayer @nEmail, @nPassword", parameters: new[] { nEmail, nPassword }).AsEnumerable().FirstOrDefault();
+                    if (int.TryParse(msn.responseMessage, out int playerId))
+                    {
+                        context.Configs.Add(new Config { DifficultyId = 1, PlayerId = playerId, Questions = 10 });
+                        context.SaveChanges();
+                    }
+                    return msn.responseMessage;
                 }
-                return msn.responseMessage;
+            }
+            catch (Exception e)
+            {
+                return e.Message;
             }
         }
 
