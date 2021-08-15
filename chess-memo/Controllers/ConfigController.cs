@@ -20,7 +20,7 @@ namespace chess_memo.Controllers
                 try
                 {
                     Dictionary<string, string> body = read_body();
-                    Config playerConfig = context.Configs.Where(x => x.PlayerId == Int32.Parse(HttpContext.Session.GetString("id"))).FirstOrDefault();
+                    Config playerConfig = context.Configs.Where(x => x.PlayerId == Int32.Parse(HttpContext.Request.Headers["id"].ToString())).FirstOrDefault();
                     return new Dictionary<string, string> { { "DifficultyId", $"{playerConfig.DifficultyId}"},
                     { "Questions", $"{playerConfig.Questions}" }};
                     ;
@@ -41,7 +41,7 @@ namespace chess_memo.Controllers
                 try
                 {
                     Dictionary<string, string> body = read_body();
-                    Config playerConfig = context.Configs.Where(x => x.PlayerId == Int32.Parse(HttpContext.Session.GetString("id"))).FirstOrDefault();
+                    Config playerConfig = context.Configs.Where(x => x.PlayerId == Int32.Parse(HttpContext.Request.Headers["id"].ToString())).FirstOrDefault();
                     playerConfig.DifficultyId = Int32.Parse(body["DifficultyId"]);
                     playerConfig.Questions = Int32.Parse(body["Questions"]);
                     context.SaveChanges();

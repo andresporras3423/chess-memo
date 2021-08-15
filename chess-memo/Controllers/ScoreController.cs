@@ -23,7 +23,7 @@ namespace chess_memo.Controllers
                 using (var context = new chessmemoContext())
                 {
                     Dictionary<string, string> body = read_body();
-                    var nId = new SqlParameter("@nId", Int32.Parse(HttpContext.Session.GetString("id")));
+                    var nId = new SqlParameter("@nId", Int32.Parse(HttpContext.Request.Headers["id"].ToString()));
                     var nDifficultyId = new SqlParameter("@nDifficultyId", Int32.Parse(body["nDifficultyId"]));
                     var nQuestions = new SqlParameter("@nQuestions", Int32.Parse(body["nQuestions"]));
                     var nCorrects = new SqlParameter("@nCorrects", Int32.Parse(body["nCorrects"]));
@@ -75,7 +75,7 @@ namespace chess_memo.Controllers
                     Dictionary<string, string> body = read_body();
                     var nDifficultyId = new SqlParameter("@nDifficultyId", body["nDifficultyId"]);
                     var nQuestions = new SqlParameter("@nQuestions", body["nQuestions"]);
-                    var nPlayerId = new SqlParameter("@nPlayerId", HttpContext.Session.GetString("id"));
+                    var nPlayerId = new SqlParameter("@nPlayerId", Int32.Parse(HttpContext.Request.Headers["id"].ToString()));
                     List<RankingScore> top10 = context.Set<RankingScore>().FromSqlRaw("EXECUTE dbo.getBestPersonalScores @nDifficultyId, @nQuestions, @nPlayerId", parameters: new[] { nDifficultyId, nQuestions, nPlayerId }).ToList<RankingScore>();
                     return top10;
                 }
@@ -98,7 +98,7 @@ namespace chess_memo.Controllers
                     Dictionary<string, string> body = read_body();
                     var nDifficultyId = new SqlParameter("@nDifficultyId", body["nDifficultyId"]);
                     var nQuestions = new SqlParameter("@nQuestions", body["nQuestions"]);
-                    var nPlayerId = new SqlParameter("@nPlayerId", HttpContext.Session.GetString("id"));
+                    var nPlayerId = new SqlParameter("@nPlayerId", Int32.Parse(HttpContext.Request.Headers["id"].ToString()));
                     List<RankingScore> top10 = context.Set<RankingScore>().FromSqlRaw("EXECUTE dbo.getRecentPersonalScores @nDifficultyId, @nQuestions, @nPlayerId", parameters: new[] { nDifficultyId, nQuestions, nPlayerId }).ToList<RankingScore>();
                     return top10;
                 }

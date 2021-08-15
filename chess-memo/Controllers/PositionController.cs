@@ -20,7 +20,7 @@ namespace chess_memo.Controllers
             using (var context = new chessmemoContext())
             {
                 Dictionary<string, string> body = read_body();
-                var nId = new SqlParameter("@nId", Int32.Parse(HttpContext.Session.GetString("id")));
+                var nId = new SqlParameter("@nId", Int32.Parse(HttpContext.Request.Headers["id"].ToString()));
                List<UniquePosition> msn = context.Set<UniquePosition>().FromSqlRaw("EXECUTE dbo.selectPositions @nId", parameters: new[] { nId }).AsEnumerable().ToList<UniquePosition>();
                 return msn;
             }
